@@ -2,7 +2,10 @@ import { Hero } from "@/components/home/Hero";
 import { TrustBar } from "@/components/home/TrustBar";
 import { CTACards } from "@/components/home/CTACards";
 import { ServicesOverview } from "@/components/home/ServicesOverview";
+import { ProcessTimeline } from "@/components/home/ProcessTimeline";
+import { BrokerComparison } from "@/components/home/BrokerComparison";
 import { QuickQuoteForm } from "@/components/forms/QuickQuoteForm";
+import { GoogleReviews } from "@/components/home/GoogleReviews";
 import { TestimonialsCarousel } from "@/components/home/TestimonialsCarousel";
 import { FinalCTA } from "@/components/home/FinalCTA";
 import { Section } from "@/components/ui/Section";
@@ -17,6 +20,8 @@ export default async function HomePage() {
       <TrustBar />
       <CTACards />
       <ServicesOverview />
+      <ProcessTimeline />
+      <BrokerComparison />
 
       <Section>
         <div className="max-w-3xl mx-auto">
@@ -35,6 +40,7 @@ export default async function HomePage() {
         </div>
       </Section>
 
+      <GoogleReviews />
       <TestimonialsCarousel testimonials={testimonials} />
       <FinalCTA />
     </>

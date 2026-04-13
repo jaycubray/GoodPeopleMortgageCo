@@ -5,6 +5,8 @@ import { Section } from "@/components/ui/Section";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { SliderInput } from "@/components/ui/SliderInput";
+import { DonutChart } from "@/components/ui/DonutChart";
+import { AnimatedNumber } from "@/components/ui/AnimatedNumber";
 import { COMPANY } from "@/lib/constants";
 import {
   Calculator, RefreshCw, DollarSign, Home, Percent,
@@ -21,7 +23,18 @@ function calcPayment(principal: number, annualRate: number, years: number) {
   return (principal * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
 }
 
-function ResultBox({ label, value, highlight, color }: { label: string; value: string; highlight?: boolean; color?: string }) {
+function ResultBox({ label, num, prefix = "$", decimals = 0, highlight, color, suffix = "" }: { label: string; num: number; prefix?: string; decimals?: number; highlight?: boolean; color?: string; suffix?: string }) {
+  return (
+    <div className="text-center">
+      <p className="text-sm text-gray-500 mb-1">{label}</p>
+      <p className={`text-2xl font-bold ${color || (highlight ? "text-primary" : "text-gray-800")}`}>
+        <AnimatedNumber value={num} prefix={prefix} decimals={decimals} suffix={suffix} />
+      </p>
+    </div>
+  );
+}
+
+function ResultBoxStatic({ label, value, highlight, color }: { label: string; value: string; highlight?: boolean; color?: string }) {
   return (
     <div className="text-center">
       <p className="text-sm text-gray-500 mb-1">{label}</p>
@@ -47,6 +60,7 @@ function MortgageCalc() {
   const p = parseFloat(loan) || 0, r = parseFloat(rate) || 0, t = parseFloat(term) || 30;
   const mo = calcPayment(p, r, t);
   const total = mo * t * 12;
+  const interest = total - p;
   return (
     <div className="space-y-6">
       <SliderInput label="Loan Amount" id="m1" value={loan} onChange={setLoan} min={50000} max={2000000} step={5000} prefix="$" />
@@ -54,10 +68,13 @@ function MortgageCalc() {
         <SliderInput label="Interest Rate" id="m2" value={rate} onChange={setRate} min={1} max={12} step={0.125} suffix="%" />
         <SliderInput label="Loan Term" id="m3" value={term} onChange={setTerm} min={5} max={30} step={5} suffix=" yr" />
       </div>
-      <div className="grid md:grid-cols-3 gap-6 bg-gray-50 rounded-xl p-6">
-        <ResultBox label="Monthly Payment" value={`$${fmt(mo)}`} highlight />
-        <ResultBox label="Total Interest" value={`$${fmtInt(total - p)}`} />
-        <ResultBox label="Total Cost" value={`$${fmtInt(total)}`} />
+      <div className="grid md:grid-cols-[1fr_auto] gap-8 bg-gray-50 rounded-xl p-6 items-center">
+        <div className="grid grid-cols-3 gap-4">
+          <ResultBox label="Monthly Payment" num={mo} decimals={2} highlight />
+          <ResultBox label="Total Interest" num={interest} />
+          <ResultBox label="Total Cost" num={total} />
+        </div>
+        <DonutChart principal={p} interest={interest} />
       </div>
       <CalcCTA />
     </div>
@@ -83,9 +100,9 @@ function RefinanceCalc() {
       </div>
       <SliderInput label="New Term" id="r4" value={term} onChange={setTerm} min={5} max={30} step={5} suffix=" yr" />
       <div className="grid md:grid-cols-3 gap-6 bg-gray-50 rounded-xl p-6">
-        <ResultBox label="Current Payment" value={`$${fmt(oldPmt)}`} />
-        <ResultBox label="New Payment" value={`$${fmt(newPmt)}`} highlight />
-        <ResultBox label="Monthly Savings" value={`$${fmt(Math.max(0, savings))}`} color="text-green-600" />
+        <ResultBox label="Current Payment" num={oldPmt} decimals={2} />
+        <ResultBox label="New Payment" num={newPmt} decimals={2} highlight />
+        <ResultBox label="Monthly Savings" num={Math.max(0, savings)} decimals={2} color="text-green-600" />
       </div>
       <CalcCTA text="Ready to refinance? Let us find your best rate." />
     </div>
@@ -122,9 +139,9 @@ function ExtraPaymentCalc() {
       </div>
       <SliderInput label="Extra Monthly Payment" id="ep4" value={extra} onChange={setExtra} min={0} max={2000} step={25} prefix="$" />
       <div className="grid md:grid-cols-3 gap-6 bg-gray-50 rounded-xl p-6">
-        <ResultBox label="Interest Saved" value={`$${fmtInt(Math.max(0, interestSaved))}`} color="text-green-600" />
-        <ResultBox label="Years Saved" value={Math.max(0, yearsOff).toFixed(1)} highlight />
-        <ResultBox label="Payoff In" value={`${(months / 12).toFixed(1)} years`} />
+        <ResultBox label="Interest Saved" num={Math.max(0, interestSaved)} color="text-green-600" />
+        <ResultBoxStatic label="Years Saved" value={Math.max(0, yearsOff).toFixed(1)} highlight />
+        <ResultBoxStatic label="Payoff In" value={`${(months / 12).toFixed(1)} years`} />
       </div>
       <CalcCTA />
     </div>
@@ -156,11 +173,11 @@ function AffordabilityCalc() {
       <div className="grid md:grid-cols-2 gap-6 bg-gray-50 rounded-xl p-6">
         <div className="text-center">
           <p className="text-sm text-gray-500 mb-1">Home You Can Afford</p>
-          <p className="text-3xl font-bold text-primary">${fmtInt(Math.max(0, maxHome))}</p>
+          <p className="text-3xl font-bold text-primary"><AnimatedNumber value={Math.max(0, maxHome)} prefix="$" /></p>
         </div>
         <div className="text-center">
           <p className="text-sm text-gray-500 mb-1">Max Monthly Payment</p>
-          <p className="text-2xl font-bold text-gray-800">${fmt(Math.max(0, maxPmt))}</p>
+          <p className="text-2xl font-bold text-gray-800"><AnimatedNumber value={Math.max(0, maxPmt)} prefix="$" decimals={2} /></p>
         </div>
       </div>
       <CalcCTA text="Ready to get pre-approved? Start your application today." />
@@ -186,9 +203,9 @@ function PrincipalCalc() {
         <SliderInput label="Loan Term" id="p3" value={term} onChange={setTerm} min={5} max={30} step={5} suffix=" yr" />
       </div>
       <div className="grid md:grid-cols-3 gap-6 bg-gray-50 rounded-xl p-6">
-        <ResultBox label="Loan Amount" value={`$${fmtInt(Math.max(0, principal))}`} highlight />
-        <ResultBox label="Total Interest" value={`$${fmtInt(Math.max(0, totalPaid - principal))}`} />
-        <ResultBox label="Total Paid" value={`$${fmtInt(totalPaid)}`} />
+        <ResultBox label="Loan Amount" num={Math.max(0, principal)} highlight />
+        <ResultBox label="Total Interest" num={Math.max(0, totalPaid - principal)} />
+        <ResultBox label="Total Paid" num={totalPaid} />
       </div>
       <CalcCTA />
     </div>
@@ -215,9 +232,9 @@ function TaxBenefitsCalc() {
       </div>
       <SliderInput label="Annual Property Tax" id="tb4" value={propTax} onChange={setPropTax} min={0} max={25000} step={250} prefix="$" />
       <div className="grid md:grid-cols-3 gap-6 bg-gray-50 rounded-xl p-6">
-        <ResultBox label="Annual Interest" value={`$${fmtInt(annualInterest)}`} />
-        <ResultBox label="Total Deductions" value={`$${fmtInt(totalDeduction)}`} />
-        <ResultBox label="Est. Tax Savings" value={`$${fmtInt(annualSavings)}/yr`} color="text-green-600" />
+        <ResultBox label="Annual Interest" num={annualInterest} />
+        <ResultBox label="Total Deductions" num={totalDeduction} />
+        <ResultBox label="Est. Tax Savings" num={annualSavings} suffix="/yr" color="text-green-600" />
       </div>
       <p className="text-xs text-gray-400 text-center">* Simplified estimate. Consult a tax professional for accurate advice.</p>
       <CalcCTA />
@@ -250,9 +267,9 @@ function APRCalc() {
       </div>
       <SliderInput label="Total Fees & Points" id="apr4" value={fees} onChange={setFees} min={0} max={30000} step={500} prefix="$" />
       <div className="grid md:grid-cols-3 gap-6 bg-gray-50 rounded-xl p-6">
-        <ResultBox label="Note Rate" value={`${r.toFixed(3)}%`} />
-        <ResultBox label="APR" value={`${apr.toFixed(3)}%`} highlight />
-        <ResultBox label="Monthly Payment" value={`$${fmt(basePmt)}`} />
+        <ResultBox label="Note Rate" num={r} prefix="" decimals={3} suffix="%" />
+        <ResultBox label="APR" num={apr} prefix="" decimals={3} suffix="%" highlight />
+        <ResultBox label="Monthly Payment" num={basePmt} decimals={2} />
       </div>
       <CalcCTA />
     </div>
@@ -279,9 +296,9 @@ function InterestOnlyCalc() {
         <SliderInput label="Total Loan Term" id="io4" value={term} onChange={setTerm} min={10} max={30} step={5} suffix=" yr" />
       </div>
       <div className="grid md:grid-cols-3 gap-6 bg-gray-50 rounded-xl p-6">
-        <ResultBox label="IO Payment" value={`$${fmt(ioPayment)}`} highlight />
-        <ResultBox label="Full Payment After IO" value={`$${fmt(fullPayment)}`} />
-        <ResultBox label="Payment Increase" value={`+$${fmt(Math.max(0, fullPayment - ioPayment))}`} color="text-orange-600" />
+        <ResultBox label="IO Payment" num={ioPayment} decimals={2} highlight />
+        <ResultBox label="Full Payment After IO" num={fullPayment} decimals={2} />
+        <ResultBox label="Payment Increase" num={Math.max(0, fullPayment - ioPayment)} prefix="+$" decimals={2} color="text-orange-600" />
       </div>
       <CalcCTA />
     </div>
@@ -313,9 +330,9 @@ function PointsCalc() {
         <SliderInput label="Loan Term" id="pt5" value={term} onChange={setTerm} min={5} max={30} step={5} suffix=" yr" />
       </div>
       <div className="grid md:grid-cols-3 gap-6 bg-gray-50 rounded-xl p-6">
-        <ResultBox label="Cost of Points" value={`$${fmtInt(cost)}`} />
-        <ResultBox label="Monthly Savings" value={`$${fmt(Math.max(0, savings))}`} color="text-green-600" />
-        <ResultBox label="Break Even" value={breakEven > 0 ? `${breakEven} mo` : "N/A"} highlight />
+        <ResultBox label="Cost of Points" num={cost} />
+        <ResultBox label="Monthly Savings" num={Math.max(0, savings)} decimals={2} color="text-green-600" />
+        <ResultBoxStatic label="Break Even" value={breakEven > 0 ? `${breakEven} mo` : "N/A"} highlight />
       </div>
       {breakEven > 0 && (
         <p className="text-xs text-gray-400 text-center">
@@ -352,9 +369,9 @@ function IncomeCalc() {
         <SliderInput label="Monthly Debts" id="inc5" value={debts} onChange={setDebts} min={0} max={5000} step={50} prefix="$" />
       </div>
       <div className="grid md:grid-cols-3 gap-6 bg-gray-50 rounded-xl p-6">
-        <ResultBox label="Required Annual Income" value={`$${fmtInt(Math.max(0, reqAnnual))}`} highlight />
-        <ResultBox label="Monthly Payment" value={`$${fmt(mo)}`} />
-        <ResultBox label="Required Monthly Income" value={`$${fmtInt(Math.max(0, reqMonthly))}`} />
+        <ResultBox label="Required Annual Income" num={Math.max(0, reqAnnual)} highlight />
+        <ResultBox label="Monthly Payment" num={mo} decimals={2} />
+        <ResultBox label="Required Monthly Income" num={Math.max(0, reqMonthly)} />
       </div>
       <p className="text-xs text-gray-400 text-center">* Based on 43% maximum debt-to-income ratio.</p>
       <CalcCTA />

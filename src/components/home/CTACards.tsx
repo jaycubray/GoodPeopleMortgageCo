@@ -3,6 +3,7 @@
 import { Calculator, FileText, Rocket, ArrowRight } from "lucide-react";
 import { COMPANY } from "@/lib/constants";
 import { motion } from "framer-motion";
+import { TiltCard } from "@/components/ui/TiltCard";
 
 const cards = [
   {
@@ -48,8 +49,9 @@ export function CTACards() {
               viewport={{ once: true }}
               transition={{ delay: i * 0.15, duration: 0.5 }}
               whileHover={{ y: -8, transition: { duration: 0.2 } }}
-              className="group block"
+              className="group block perspective-[1000px]"
             >
+              <TiltCard className="h-full">
               <div className="relative bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden h-full">
                 {/* Top gradient bar */}
                 <div className={`h-1.5 bg-gradient-to-r ${card.gradient}`} />
@@ -68,6 +70,7 @@ export function CTACards() {
                   </span>
                 </div>
               </div>
+              </TiltCard>
             </motion.a>
           ))}
         </div>
