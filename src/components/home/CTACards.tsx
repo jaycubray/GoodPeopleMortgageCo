@@ -1,8 +1,6 @@
 "use client";
 
-import { Calculator, FileText, Rocket } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
+import { Calculator, FileText, Rocket, ArrowRight } from "lucide-react";
 import { COMPANY } from "@/lib/constants";
 import { motion } from "framer-motion";
 
@@ -13,6 +11,8 @@ const cards = [
     description: "Calculate your mortgage payment, affordability & more",
     href: "/mortgage-calculators",
     cta: "Calculate Now",
+    gradient: "from-primary to-primary-dark",
+    accent: "bg-primary-light/20",
   },
   {
     icon: FileText,
@@ -20,6 +20,8 @@ const cards = [
     description: "Find out which loan program is right for you",
     href: "/loan-programs",
     cta: "Explore Programs",
+    gradient: "from-secondary-dark to-secondary",
+    accent: "bg-secondary/20",
   },
   {
     icon: Rocket,
@@ -27,37 +29,46 @@ const cards = [
     description: "Get pre-approved in minutes with our quick & easy app",
     href: COMPANY.applyUrl,
     cta: "Get Started",
+    gradient: "from-primary-darker to-primary",
+    accent: "bg-primary/20",
   },
 ];
 
 export function CTACards() {
   return (
-    <section className="py-16 -mt-16 relative z-10">
+    <section className="py-16 -mt-20 relative z-10">
       <div className="max-w-7xl mx-auto px-4">
         <div className="grid md:grid-cols-3 gap-6">
           {cards.map((card, i) => (
-            <motion.div
+            <motion.a
               key={card.title}
-              initial={{ opacity: 0, y: 30 }}
+              href={card.href}
+              initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.15 }}
+              transition={{ delay: i * 0.15, duration: 0.5 }}
+              whileHover={{ y: -8, transition: { duration: 0.2 } }}
+              className="group block"
             >
-              <Card className="text-center h-full">
-                <CardContent className="flex flex-col items-center py-10">
-                  <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+              <div className="relative bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden h-full">
+                {/* Top gradient bar */}
+                <div className={`h-1.5 bg-gradient-to-r ${card.gradient}`} />
+
+                <div className="p-8 text-center">
+                  <div className={`w-16 h-16 ${card.accent} rounded-2xl flex items-center justify-center mx-auto mb-5 group-hover:scale-110 transition-transform duration-300`}>
                     <card.icon className="h-8 w-8 text-primary" />
                   </div>
                   <h3 className="text-xl font-serif font-bold text-gray-900 mb-3">
                     {card.title}
                   </h3>
-                  <p className="text-gray-600 mb-6">{card.description}</p>
-                  <Button href={card.href} variant="outline" size="sm">
+                  <p className="text-gray-500 text-sm mb-6">{card.description}</p>
+                  <span className="inline-flex items-center gap-2 text-sm font-semibold text-primary group-hover:gap-3 transition-all">
                     {card.cta}
-                  </Button>
-                </CardContent>
-              </Card>
-            </motion.div>
+                    <ArrowRight className="h-4 w-4" />
+                  </span>
+                </div>
+              </div>
+            </motion.a>
           ))}
         </div>
       </div>
