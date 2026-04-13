@@ -1,0 +1,200 @@
+[
+  {
+    "slug": "fixed-rate-mortgage",
+    "title": "Fixed Rate Mortgage",
+    "shortDescription": "Lock in your rate for the life of the loan with predictable monthly payments.",
+    "fullContent": "A fixed-rate mortgage offers the stability and predictability that many homeowners prefer. Your interest rate remains the same throughout the entire life of your loan, which means your principal and interest payments never change.\n\n## Why Choose a Fixed Rate?\n\nFixed-rate mortgages are the most popular choice for homebuyers because they provide certainty in your monthly budget. Whether you choose a 15-year or 30-year term, you'll always know exactly what your payment will be.\n\n## Key Benefits\n\n- **Predictable payments** — Your rate never changes, making budgeting easy\n- **Protection from rate increases** — Even if market rates rise, yours stays the same\n- **Multiple term options** — Choose from 10, 15, 20, 25, or 30-year terms\n- **Build equity consistently** — A larger portion of each payment goes toward principal over time",
+    "icon": "Lock",
+    "image": "/images/loan-programs/loan-programs.png",
+    "features": [
+      "Rate stays the same for the entire loan term",
+      "Predictable monthly principal and interest payments",
+      "Available in 10, 15, 20, 25, and 30-year terms",
+      "Protection against rising interest rates",
+      "Ideal for long-term homeowners"
+    ],
+    "eligibility": [
+      "Minimum credit score of 620 for conventional",
+      "Debt-to-income ratio typically below 45%",
+      "Stable employment and income history",
+      "Down payment as low as 3% with PMI"
+    ]
+  },
+  {
+    "slug": "adjustable-rate-mortgage",
+    "title": "Adjustable Rate Mortgage (ARM)",
+    "shortDescription": "Start with a lower rate that adjusts periodically based on market conditions.",
+    "fullContent": "An adjustable-rate mortgage (ARM) offers a lower initial interest rate compared to fixed-rate mortgages. After the initial fixed period, your rate adjusts periodically based on a market index.\n\n## How ARMs Work\n\nARMs have an initial fixed-rate period (typically 3, 5, 7, or 10 years) followed by adjustment periods. A 5/1 ARM, for example, has a fixed rate for 5 years, then adjusts once per year.\n\n## When an ARM Makes Sense\n\n- You plan to sell or refinance before the initial fixed period ends\n- You want the lowest possible initial payment\n- You expect your income to increase over time\n- Current fixed rates are higher than ARM initial rates",
+    "icon": "SlidersHorizontal",
+    "image": "/images/loan-programs/loan-programs.png",
+    "features": [
+      "Lower initial interest rate than fixed-rate loans",
+      "Rate caps protect against extreme increases",
+      "Initial fixed period of 3, 5, 7, or 10 years",
+      "Potential for lower payments if rates decrease",
+      "More purchasing power with lower initial rate"
+    ],
+    "eligibility": [
+      "Minimum credit score of 620",
+      "Stable income documentation",
+      "Understanding of rate adjustment terms",
+      "Adequate reserves for potential payment increases"
+    ]
+  },
+  {
+    "slug": "interest-only-mortgage",
+    "title": "Interest Only Mortgage",
+    "shortDescription": "Pay only interest for an initial period, maximizing your cash flow.",
+    "fullContent": "An interest-only mortgage allows you to pay only the interest portion of your loan for a set period, typically 5 to 10 years. After the interest-only period, the loan converts to a fully amortizing mortgage.\n\n## How It Works\n\nDuring the interest-only period, your payments are significantly lower because you're not paying any principal. Once the interest-only period ends, your payments will increase as you begin paying both principal and interest.\n\n## Ideal Candidates\n\n- Real estate investors maximizing cash flow\n- Borrowers with irregular income patterns\n- Homeowners who plan to sell within the interest-only period\n- High-income earners seeking tax advantages",
+    "icon": "Percent",
+    "image": "/images/loan-programs/loan-programs.png",
+    "features": [
+      "Lower initial monthly payments",
+      "Interest-only period of 5 to 10 years",
+      "Maximize cash flow during interest-only period",
+      "Flexibility to make principal payments when you choose",
+      "Available on both fixed and adjustable-rate loans"
+    ],
+    "eligibility": [
+      "Higher credit score typically required (700+)",
+      "Larger down payment may be required",
+      "Strong income and asset documentation",
+      "Understanding of payment increase after IO period"
+    ]
+  },
+  {
+    "slug": "graduated-payment-mortgage",
+    "title": "Graduated Payment Mortgage",
+    "shortDescription": "Payments start low and increase gradually, perfect for growing incomes.",
+    "fullContent": "A graduated payment mortgage (GPM) features payments that start lower than a standard fixed-rate mortgage and gradually increase over a set period, typically 5 to 10 years, before leveling off for the remainder of the loan.\n\n## How It Works\n\nPayments increase at a predetermined rate each year during the graduation period. This structure is designed for borrowers who expect their income to grow over time.\n\n## Best For\n\n- Young professionals with expected income growth\n- Recent graduates entering the workforce\n- Borrowers who need lower initial payments\n- Those who expect significant career advancement",
+    "icon": "TrendingUp",
+    "image": "/images/loan-programs/loan-programs.png",
+    "features": [
+      "Lower initial monthly payments",
+      "Payments increase gradually over 5-10 years",
+      "Payments stabilize after the graduation period",
+      "Designed for borrowers with growing incomes",
+      "Available through FHA and conventional programs"
+    ],
+    "eligibility": [
+      "Standard credit and income requirements",
+      "Must qualify based on the higher future payments",
+      "Documentation of income growth potential",
+      "Understanding of negative amortization risk"
+    ]
+  },
+  {
+    "slug": "conventional-loans",
+    "title": "Conventional Loans",
+    "shortDescription": "Traditional mortgage options with competitive rates and flexible terms.",
+    "fullContent": "Conventional loans are mortgage loans that are not insured or guaranteed by a government agency. They are available through private lenders and typically offer competitive rates for borrowers with good credit.\n\n## Why Choose Conventional?\n\nConventional loans offer flexibility in terms, down payment options, and property types. With strong credit, you can often secure the best rates available in the market.\n\n## Down Payment Options\n\n- As low as 3% with Home Ready or Home Possible programs\n- 5% standard minimum\n- 20% to eliminate PMI requirement\n- Gift funds allowed for down payment",
+    "icon": "Home",
+    "image": "/images/loan-programs/conventional.png",
+    "features": [
+      "Competitive interest rates for qualified borrowers",
+      "Down payments as low as 3%",
+      "PMI can be removed at 20% equity",
+      "Available for primary, second homes, and investment properties",
+      "Fixed and adjustable rate options",
+      "Loan amounts up to conforming limits"
+    ],
+    "eligibility": [
+      "Minimum credit score of 620",
+      "Debt-to-income ratio below 45%",
+      "Stable employment for at least 2 years",
+      "Down payment of 3% to 20%"
+    ]
+  },
+  {
+    "slug": "fha-loans",
+    "title": "FHA Loans",
+    "shortDescription": "Government-insured loans with low down payments and flexible credit requirements.",
+    "fullContent": "FHA loans are insured by the Federal Housing Administration and are designed to help more Americans achieve homeownership. They feature lower down payment requirements and more lenient credit guidelines than conventional loans.\n\n## Benefits of FHA Loans\n\nFHA loans are one of the most popular loan programs for first-time homebuyers because of their accessibility and flexibility. The government insurance backing allows lenders to offer more favorable terms to borrowers.\n\n## FHA Loan Types\n\n- **FHA Purchase** — Buy a home with as little as 3.5% down\n- **FHA Streamline Refinance** — Simplified refinance for existing FHA loans\n- **FHA Cash-Out Refinance** — Access your home equity\n- **FHA 203(k)** — Finance both the purchase and renovation of a home",
+    "icon": "Shield",
+    "image": "/images/loan-programs/fha.png",
+    "features": [
+      "Down payment as low as 3.5%",
+      "Credit scores accepted as low as 580",
+      "Higher debt-to-income ratios allowed",
+      "Gift funds accepted for down payment",
+      "Competitive interest rates",
+      "Available for 1-4 unit properties"
+    ],
+    "eligibility": [
+      "Minimum credit score of 580 for 3.5% down",
+      "500-579 credit score with 10% down",
+      "Steady employment for 2 years",
+      "Property must meet FHA standards",
+      "Must be a primary residence"
+    ]
+  },
+  {
+    "slug": "va-loans",
+    "title": "VA Loans",
+    "shortDescription": "Exclusive benefits for veterans and military with zero down payment.",
+    "fullContent": "VA loans are guaranteed by the U.S. Department of Veterans Affairs and offer exceptional benefits to eligible veterans, active-duty service members, and surviving spouses.\n\n## VA Loan Benefits\n\nVA loans are widely considered the best mortgage option available, offering zero down payment, no PMI, and competitive rates that are often lower than conventional loans.\n\n## VA Loan Types\n\n- **VA Purchase** — Buy a home with $0 down\n- **VA Streamline (IRRRL)** — Simplified refinance for existing VA loans\n- **VA Cash-Out Refinance** — Access your home equity\n- **VA Native American Direct Loan** — For eligible Native American veterans",
+    "icon": "Medal",
+    "image": "/images/loan-programs/va.png",
+    "features": [
+      "No down payment required",
+      "No Private Mortgage Insurance (PMI)",
+      "Competitive interest rates",
+      "Limited closing costs",
+      "No prepayment penalties",
+      "Available for purchase and refinance"
+    ],
+    "eligibility": [
+      "Active-duty service members",
+      "Veterans with eligible discharge",
+      "National Guard and Reserve members",
+      "Surviving spouses of eligible veterans",
+      "Must obtain a Certificate of Eligibility (COE)"
+    ]
+  },
+  {
+    "slug": "jumbo-loans",
+    "title": "Jumbo Loans",
+    "shortDescription": "Finance luxury homes that exceed conforming loan limits.",
+    "fullContent": "Jumbo loans are mortgage loans that exceed the conforming loan limits set by the Federal Housing Finance Agency (FHFA). They are designed for higher-priced properties and luxury homes.\n\n## When You Need a Jumbo Loan\n\nIf you're purchasing a home that exceeds the conforming loan limit (currently $766,550 in most areas), you'll need a jumbo loan. These loans offer the same flexibility as conventional loans but for larger amounts.\n\n## Jumbo Loan Considerations\n\nBecause jumbo loans carry more risk for lenders, they typically require stronger financial profiles. However, rates can be very competitive for well-qualified borrowers.",
+    "icon": "Castle",
+    "image": "/images/loan-programs/jumbo.png",
+    "features": [
+      "Finance homes above conforming loan limits",
+      "Competitive rates for qualified borrowers",
+      "Fixed and adjustable rate options",
+      "Available for primary and second homes",
+      "Higher loan amounts available",
+      "Flexible term options"
+    ],
+    "eligibility": [
+      "Minimum credit score of 700 typically required",
+      "Down payment of 10-20% or more",
+      "Lower debt-to-income ratio required",
+      "Significant cash reserves",
+      "Strong income documentation"
+    ]
+  },
+  {
+    "slug": "usda-loans",
+    "title": "USDA Loans",
+    "shortDescription": "Zero down payment loans for eligible rural and suburban homebuyers.",
+    "fullContent": "USDA loans are backed by the U.S. Department of Agriculture and offer 100% financing for eligible rural and suburban homebuyers. They are designed to promote homeownership in less densely populated areas.\n\n## USDA Loan Benefits\n\nUSDA loans provide an excellent path to homeownership for moderate-income families in eligible areas, offering zero down payment and below-market interest rates.\n\n## USDA Loan Types\n\n- **USDA Purchase** — Buy a home with $0 down in eligible areas\n- **USDA Streamline Refinance** — Simplified refinance for existing USDA loans\n- **USDA Repair Loans** — Finance home repairs and improvements",
+    "icon": "Trees",
+    "image": "/images/loan-programs/loan-programs.png",
+    "features": [
+      "No down payment required",
+      "Below-market interest rates",
+      "Low mortgage insurance costs",
+      "Flexible credit guidelines",
+      "Closing costs can be financed",
+      "Available for purchase and refinance"
+    ],
+    "eligibility": [
+      "Property must be in an eligible rural area",
+      "Household income within USDA limits",
+      "U.S. citizenship or permanent residency",
+      "Minimum credit score of 640 preferred",
+      "Must be a primary residence"
+    ]
+  }
+]

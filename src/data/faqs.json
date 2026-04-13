@@ -1,0 +1,42 @@
+[
+  {
+    "question": "What is a mortgage?",
+    "answer": "A mortgage is a loan used to purchase or maintain a home, land, or other types of real estate. The borrower agrees to pay the lender over time, typically in a series of regular payments that are divided into principal and interest. The property serves as collateral to secure the loan."
+  },
+  {
+    "question": "How do I get pre-approved for a mortgage?",
+    "answer": "Getting pre-approved involves submitting a mortgage application along with documentation of your income, assets, and credit history. A lender reviews your financial information and determines the maximum loan amount you qualify for. Pre-approval gives you a clear picture of your budget and shows sellers you're a serious buyer."
+  },
+  {
+    "question": "What credit score do I need to buy a home?",
+    "answer": "Credit score requirements vary by loan type. FHA loans typically require a minimum score of 580 for a 3.5% down payment, while conventional loans usually need at least 620. VA and USDA loans don't have a strict minimum but most lenders prefer 620+. Higher scores generally result in better interest rates."
+  },
+  {
+    "question": "How much down payment is required?",
+    "answer": "Down payment requirements depend on the loan program. Conventional loans can go as low as 3% down with programs like Home Ready or Home Possible. FHA loans require 3.5% down. VA and USDA loans offer 0% down payment options for eligible borrowers. A 20% down payment eliminates private mortgage insurance (PMI) on conventional loans."
+  },
+  {
+    "question": "What are closing costs?",
+    "answer": "Closing costs are fees and expenses paid at the settlement of a real estate transaction, beyond the property's purchase price. They typically range from 2% to 5% of the loan amount and include lender fees, appraisal fees, title insurance, escrow fees, and prepaid taxes and insurance."
+  },
+  {
+    "question": "What is Private Mortgage Insurance (PMI)?",
+    "answer": "PMI is insurance that protects the lender if you default on your mortgage. It's typically required on conventional loans when you put less than 20% down. PMI can be removed once you reach 20% equity in your home. FHA loans have their own mortgage insurance called MIP (Mortgage Insurance Premium)."
+  },
+  {
+    "question": "What's the difference between fixed-rate and adjustable-rate mortgages?",
+    "answer": "A fixed-rate mortgage has the same interest rate for the entire loan term, providing predictable monthly payments. An adjustable-rate mortgage (ARM) has an initial fixed-rate period followed by periodic rate adjustments based on market conditions. ARMs typically offer lower initial rates but carry the risk of rate increases."
+  },
+  {
+    "question": "How long does the mortgage process take?",
+    "answer": "The mortgage process typically takes 30 to 45 days from application to closing. This includes time for processing, underwriting, appraisal, and document preparation. Factors that can affect the timeline include the complexity of your financial situation, property type, and how quickly you provide required documentation."
+  },
+  {
+    "question": "What documents do I need to apply for a mortgage?",
+    "answer": "Common documents include: recent pay stubs (last 30 days), W-2s or tax returns (last 2 years), bank statements (last 2 months), government-issued photo ID, proof of additional income or assets, and a signed purchase agreement if you're buying. Self-employed borrowers may need additional documentation."
+  },
+  {
+    "question": "Can I buy a home with bad credit?",
+    "answer": "Yes, it's possible to buy a home with less-than-perfect credit. FHA loans are designed for borrowers with lower credit scores. There are also credit repair strategies and down payment assistance programs that can help. Working with an experienced loan officer can help you explore all your options and create a plan to achieve homeownership."
+  }
+]
