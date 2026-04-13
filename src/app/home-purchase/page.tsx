@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { Section } from "@/components/ui/Section";
 import { Card, CardContent } from "@/components/ui/Card";
@@ -22,21 +23,29 @@ const steps = [
 ];
 
 const programs = [
-  { title: "FHA Loans", slug: "fha-loans", description: "As low as 3.5% down with flexible credit requirements." },
-  { title: "VA Loans", slug: "va-loans", description: "Zero down payment for eligible veterans and military." },
-  { title: "USDA Loans", slug: "usda-loans", description: "100% financing for eligible rural and suburban areas." },
-  { title: "Jumbo Loans", slug: "jumbo-loans", description: "Finance homes above conforming loan limits." },
-  { title: "Conventional", slug: "conventional-loans", description: "Competitive rates with as little as 3% down." },
+  { title: "FHA Loans", slug: "fha-loans", image: "/images/loan-programs/fha.png", description: "As low as 3.5% down with flexible credit requirements." },
+  { title: "VA Loans", slug: "va-loans", image: "/images/loan-programs/va.png", description: "Zero down payment for eligible veterans and military." },
+  { title: "USDA Loans", slug: "usda-loans", image: "/images/loan-programs/loan-programs.png", description: "100% financing for eligible rural and suburban areas." },
+  { title: "Jumbo Loans", slug: "jumbo-loans", image: "/images/loan-programs/jumbo.png", description: "Finance homes above conforming loan limits." },
+  { title: "Conventional", slug: "conventional-loans", image: "/images/loan-programs/conventional.png", description: "Competitive rates with as little as 3% down." },
 ];
 
 export default function HomePurchasePage() {
   return (
     <>
       {/* Hero */}
-      <section className="bg-gradient-to-br from-primary-darker to-primary text-white py-20 md:py-28">
-        <div className="max-w-7xl mx-auto px-4 text-center">
+      <section className="relative bg-primary-darker text-white py-20 md:py-28 overflow-hidden">
+        <Image
+          src="/images/hero-purchase.jpg"
+          alt="Beautiful home exterior"
+          fill
+          className="object-cover opacity-30"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-primary-darker/90 to-primary-dark/70" />
+        <div className="relative max-w-7xl mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-5xl font-serif font-bold mb-6">Buy Your Dream Home</h1>
-          <p className="text-lg text-primary-lighter max-w-2xl mx-auto mb-8">
+          <p className="text-lg text-gray-200 max-w-2xl mx-auto mb-8">
             Whether you&apos;re a first-time buyer or upgrading to your forever home, we&apos;ll guide you every step of the way.
           </p>
           <Button href={COMPANY.applyUrl} variant="secondary" size="lg">
@@ -73,6 +82,9 @@ export default function HomePurchasePage() {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {programs.map((p) => (
             <Card key={p.slug}>
+              <div className="p-4 pb-0 flex justify-center">
+                <Image src={p.image} alt={p.title} width={200} height={120} className="h-24 w-auto object-contain" />
+              </div>
               <CardContent>
                 <h3 className="text-xl font-serif font-bold text-gray-900 mb-2">{p.title}</h3>
                 <p className="text-gray-600 mb-4">{p.description}</p>

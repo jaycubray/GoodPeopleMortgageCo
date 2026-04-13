@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
@@ -28,8 +29,16 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
   return (
     <>
-      <section className="bg-gradient-to-br from-primary-darker to-primary text-white py-20 md:py-28">
-        <div className="max-w-3xl mx-auto px-4 text-center">
+      {/* Hero with featured image */}
+      <section className="relative bg-primary-darker text-white py-20 md:py-28 overflow-hidden">
+        <Image
+          src={post.image}
+          alt={post.title}
+          fill
+          className="object-cover opacity-20"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-primary-darker via-primary-darker/80 to-primary-darker/60" />
+        <div className="relative max-w-3xl mx-auto px-4 text-center">
           <p className="text-sm text-secondary font-medium mb-4">
             {post.category} &middot; {new Date(post.date).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
           </p>
@@ -40,6 +49,16 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
       <Section>
         <article className="max-w-3xl mx-auto">
+          {/* Featured image */}
+          <div className="relative w-full h-64 md:h-96 rounded-2xl overflow-hidden mb-10 -mt-16 shadow-xl">
+            <Image
+              src={post.image}
+              alt={post.title}
+              fill
+              className="object-cover"
+            />
+          </div>
+
           <div className="prose prose-lg max-w-none">
             {post.content.split("\n\n").map((block, i) => {
               if (block.startsWith("## ")) {

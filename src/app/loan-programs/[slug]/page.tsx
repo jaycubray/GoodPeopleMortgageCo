@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Section } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
@@ -29,8 +30,23 @@ export default async function LoanProgramDetailPage({ params }: { params: Promis
 
   return (
     <>
-      <section className="bg-gradient-to-br from-primary-darker to-primary text-white py-20 md:py-28">
-        <div className="max-w-7xl mx-auto px-4 text-center">
+      {/* Hero with program image */}
+      <section className="relative bg-primary-darker text-white py-20 md:py-28 overflow-hidden">
+        <Image
+          src={program.image}
+          alt={program.title}
+          fill
+          className="object-contain opacity-10"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-primary-darker via-primary-darker/90 to-primary-dark/80" />
+        <div className="relative max-w-7xl mx-auto px-4 text-center">
+          <Image
+            src={program.image}
+            alt={program.title}
+            width={120}
+            height={120}
+            className="mx-auto mb-6 h-24 w-24 object-contain"
+          />
           <h1 className="text-4xl md:text-5xl font-serif font-bold mb-6">{program.title}</h1>
           <p className="text-lg text-primary-lighter max-w-2xl mx-auto">{program.shortDescription}</p>
         </div>

@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { Section } from "@/components/ui/Section";
 import { Card, CardContent } from "@/components/ui/Card";
@@ -33,10 +34,18 @@ const programs = [
 export default function HomeRefinancePage() {
   return (
     <>
-      <section className="bg-gradient-to-br from-primary-darker to-primary text-white py-20 md:py-28">
-        <div className="max-w-7xl mx-auto px-4 text-center">
+      <section className="relative bg-primary-darker text-white py-20 md:py-28 overflow-hidden">
+        <Image
+          src="/images/hero-refinance.jpg"
+          alt="Couple reviewing finances"
+          fill
+          className="object-cover opacity-25"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-primary-darker/90 to-primary-dark/70" />
+        <div className="relative max-w-7xl mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-5xl font-serif font-bold mb-6">Refinance Your Mortgage</h1>
-          <p className="text-lg text-primary-lighter max-w-2xl mx-auto mb-8">
+          <p className="text-lg text-gray-200 max-w-2xl mx-auto mb-8">
             Lower your rate, reduce your payment, or access your home equity. Let us find the right refinance solution for you.
           </p>
           <Button href={COMPANY.applyUrl} variant="secondary" size="lg">
