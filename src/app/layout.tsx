@@ -23,10 +23,10 @@ const dmSerif = DM_Serif_Display({
 export const metadata: Metadata = {
   title: {
     template: "%s | Good People Mortgage Company",
-    default: "Good People Mortgage Company | Saint Petersburg, FL",
+    default: "Good People Mortgage Company — Home Loan Experts",
   },
   description:
-    "Good People Mortgage Company — home loan experts in Saint Petersburg, FL. FHA, VA, USDA, Conventional, and Jumbo loans. Get pre-approved today!",
+    "Realize your dreams of home ownership. FHA, VA, USDA, Conventional & Jumbo loans in Saint Petersburg, FL. Get pre-approved in minutes!",
   icons: {
     icon: "/images/favicon.png",
   },
@@ -34,6 +34,15 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     siteName: "Good People Mortgage Company",
+    title: "Good People Mortgage Company — Home Loan Experts",
+    description:
+      "Realize your dreams of home ownership. FHA, VA, USDA, Conventional & Jumbo loans. Get pre-approved in minutes!",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Good People Mortgage Company — Home Loan Experts",
+    description:
+      "Realize your dreams of home ownership. FHA, VA, USDA, Conventional & Jumbo loans. Get pre-approved in minutes!",
   },
 };
 
