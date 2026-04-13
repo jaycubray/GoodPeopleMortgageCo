@@ -150,6 +150,14 @@ export function Footer() {
             &copy; {new Date().getFullYear()} {COMPANY.name}. All rights reserved.
           </p>
         </div>
+        <div className="max-w-7xl mx-auto px-4 py-3 text-center">
+          <p className="text-xs text-primary-light/50">
+            Built by{" "}
+            <a href="https://jacobramos.com" target="_blank" rel="noopener noreferrer" className="text-primary-light/70 hover:text-white transition-colors">
+              Jacob Ramos
+            </a>
+          </p>
+        </div>
       </div>
     </footer>
   );
