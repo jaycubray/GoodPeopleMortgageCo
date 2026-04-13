@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Section } from "@/components/ui/Section";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
+import { SliderInput } from "@/components/ui/SliderInput";
 import { COMPANY } from "@/lib/constants";
 import {
   Calculator, RefreshCw, DollarSign, Home, Percent,
@@ -17,15 +17,15 @@ const fmtInt = (n: number) => Math.round(n).toLocaleString("en-US");
 function calcPayment(principal: number, annualRate: number, years: number) {
   const r = annualRate / 100 / 12;
   const n = years * 12;
-  if (r === 0) return principal / n;
+  if (r === 0 || n === 0) return principal / (n || 1);
   return (principal * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
 }
 
-function ResultBox({ label, value, highlight }: { label: string; value: string; highlight?: boolean }) {
+function ResultBox({ label, value, highlight, color }: { label: string; value: string; highlight?: boolean; color?: string }) {
   return (
     <div className="text-center">
       <p className="text-sm text-gray-500 mb-1">{label}</p>
-      <p className={`text-2xl font-bold ${highlight ? "text-primary" : "text-gray-800"}`}>{value}</p>
+      <p className={`text-2xl font-bold ${color || (highlight ? "text-primary" : "text-gray-800")}`}>{value}</p>
     </div>
   );
 }
@@ -44,17 +44,15 @@ function MortgageCalc() {
   const [loan, setLoan] = useState("300000");
   const [rate, setRate] = useState("6.5");
   const [term, setTerm] = useState("30");
-  const p = parseFloat(loan) || 0;
-  const r = parseFloat(rate) || 0;
-  const t = parseFloat(term) || 30;
+  const p = parseFloat(loan) || 0, r = parseFloat(rate) || 0, t = parseFloat(term) || 30;
   const mo = calcPayment(p, r, t);
   const total = mo * t * 12;
   return (
     <div className="space-y-6">
-      <div className="grid md:grid-cols-3 gap-4">
-        <Input label="Loan Amount ($)" id="m1" value={loan} onChange={e => setLoan(e.target.value)} />
-        <Input label="Interest Rate (%)" id="m2" value={rate} onChange={e => setRate(e.target.value)} />
-        <Input label="Loan Term (years)" id="m3" value={term} onChange={e => setTerm(e.target.value)} />
+      <SliderInput label="Loan Amount" id="m1" value={loan} onChange={setLoan} min={50000} max={2000000} step={5000} prefix="$" />
+      <div className="grid md:grid-cols-2 gap-6">
+        <SliderInput label="Interest Rate" id="m2" value={rate} onChange={setRate} min={1} max={12} step={0.125} suffix="%" />
+        <SliderInput label="Loan Term" id="m3" value={term} onChange={setTerm} min={5} max={30} step={5} suffix=" yr" />
       </div>
       <div className="grid md:grid-cols-3 gap-6 bg-gray-50 rounded-xl p-6">
         <ResultBox label="Monthly Payment" value={`$${fmt(mo)}`} highlight />
@@ -72,26 +70,22 @@ function RefinanceCalc() {
   const [oldRate, setOldRate] = useState("7.0");
   const [newRate, setNewRate] = useState("6.0");
   const [term, setTerm] = useState("30");
-  const b = parseFloat(balance) || 0;
-  const t = parseFloat(term) || 30;
+  const b = parseFloat(balance) || 0, t = parseFloat(term) || 30;
   const oldPmt = calcPayment(b, parseFloat(oldRate) || 0, t);
   const newPmt = calcPayment(b, parseFloat(newRate) || 0, t);
   const savings = oldPmt - newPmt;
   return (
     <div className="space-y-6">
-      <div className="grid md:grid-cols-2 gap-4">
-        <Input label="Loan Balance ($)" id="r1" value={balance} onChange={e => setBalance(e.target.value)} />
-        <Input label="Current Rate (%)" id="r2" value={oldRate} onChange={e => setOldRate(e.target.value)} />
-        <Input label="New Rate (%)" id="r3" value={newRate} onChange={e => setNewRate(e.target.value)} />
-        <Input label="New Term (years)" id="r4" value={term} onChange={e => setTerm(e.target.value)} />
+      <SliderInput label="Loan Balance" id="r1" value={balance} onChange={setBalance} min={50000} max={2000000} step={5000} prefix="$" />
+      <div className="grid md:grid-cols-2 gap-6">
+        <SliderInput label="Current Rate" id="r2" value={oldRate} onChange={setOldRate} min={1} max={12} step={0.125} suffix="%" />
+        <SliderInput label="New Rate" id="r3" value={newRate} onChange={setNewRate} min={1} max={12} step={0.125} suffix="%" />
       </div>
+      <SliderInput label="New Term" id="r4" value={term} onChange={setTerm} min={5} max={30} step={5} suffix=" yr" />
       <div className="grid md:grid-cols-3 gap-6 bg-gray-50 rounded-xl p-6">
         <ResultBox label="Current Payment" value={`$${fmt(oldPmt)}`} />
         <ResultBox label="New Payment" value={`$${fmt(newPmt)}`} highlight />
-        <div className="text-center">
-          <p className="text-sm text-gray-500 mb-1">Monthly Savings</p>
-          <p className="text-2xl font-bold text-green-600">${fmt(Math.max(0, savings))}</p>
-        </div>
+        <ResultBox label="Monthly Savings" value={`$${fmt(Math.max(0, savings))}`} color="text-green-600" />
       </div>
       <CalcCTA text="Ready to refinance? Let us find your best rate." />
     </div>
@@ -109,15 +103,11 @@ function ExtraPaymentCalc() {
   const n = (parseFloat(term) || 30) * 12;
   const ex = parseFloat(extra) || 0;
   const basePmt = r > 0 ? (p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1) : p / n;
-  // With extra payments
-  let balance = p;
-  let months = 0;
-  let totalInterestExtra = 0;
+  let balance = p, months = 0, totalInterestExtra = 0;
   while (balance > 0 && months < n) {
     const interest = balance * r;
     totalInterestExtra += interest;
-    const principalPaid = basePmt + ex - interest;
-    balance = Math.max(0, balance - principalPaid);
+    balance = Math.max(0, balance - (basePmt + ex - interest));
     months++;
   }
   const totalInterestNormal = basePmt * n - p;
@@ -125,25 +115,16 @@ function ExtraPaymentCalc() {
   const yearsOff = (n - months) / 12;
   return (
     <div className="space-y-6">
-      <div className="grid md:grid-cols-2 gap-4">
-        <Input label="Loan Amount ($)" id="ep1" value={loan} onChange={e => setLoan(e.target.value)} />
-        <Input label="Interest Rate (%)" id="ep2" value={rate} onChange={e => setRate(e.target.value)} />
-        <Input label="Loan Term (years)" id="ep3" value={term} onChange={e => setTerm(e.target.value)} />
-        <Input label="Extra Monthly Payment ($)" id="ep4" value={extra} onChange={e => setExtra(e.target.value)} />
+      <SliderInput label="Loan Amount" id="ep1" value={loan} onChange={setLoan} min={50000} max={2000000} step={5000} prefix="$" />
+      <div className="grid md:grid-cols-2 gap-6">
+        <SliderInput label="Interest Rate" id="ep2" value={rate} onChange={setRate} min={1} max={12} step={0.125} suffix="%" />
+        <SliderInput label="Loan Term" id="ep3" value={term} onChange={setTerm} min={5} max={30} step={5} suffix=" yr" />
       </div>
+      <SliderInput label="Extra Monthly Payment" id="ep4" value={extra} onChange={setExtra} min={0} max={2000} step={25} prefix="$" />
       <div className="grid md:grid-cols-3 gap-6 bg-gray-50 rounded-xl p-6">
-        <div className="text-center">
-          <p className="text-sm text-gray-500 mb-1">Interest Saved</p>
-          <p className="text-2xl font-bold text-green-600">${fmtInt(Math.max(0, interestSaved))}</p>
-        </div>
-        <div className="text-center">
-          <p className="text-sm text-gray-500 mb-1">Years Saved</p>
-          <p className="text-2xl font-bold text-primary">{Math.max(0, yearsOff).toFixed(1)}</p>
-        </div>
-        <div className="text-center">
-          <p className="text-sm text-gray-500 mb-1">Payoff In</p>
-          <p className="text-2xl font-bold text-gray-800">{(months / 12).toFixed(1)} years</p>
-        </div>
+        <ResultBox label="Interest Saved" value={`$${fmtInt(Math.max(0, interestSaved))}`} color="text-green-600" />
+        <ResultBox label="Years Saved" value={Math.max(0, yearsOff).toFixed(1)} highlight />
+        <ResultBox label="Payoff In" value={`${(months / 12).toFixed(1)} years`} />
       </div>
       <CalcCTA />
     </div>
@@ -166,11 +147,11 @@ function AffordabilityCalc() {
   const maxHome = maxLoan + dp;
   return (
     <div className="space-y-6">
-      <div className="grid md:grid-cols-2 gap-4">
-        <Input label="Annual Income ($)" id="a1" value={income} onChange={e => setIncome(e.target.value)} />
-        <Input label="Monthly Debts ($)" id="a2" value={debts} onChange={e => setDebts(e.target.value)} />
-        <Input label="Down Payment ($)" id="a3" value={down} onChange={e => setDown(e.target.value)} />
-        <Input label="Interest Rate (%)" id="a4" value={rate} onChange={e => setRate(e.target.value)} />
+      <SliderInput label="Annual Income" id="a1" value={income} onChange={setIncome} min={20000} max={500000} step={5000} prefix="$" />
+      <SliderInput label="Monthly Debts" id="a2" value={debts} onChange={setDebts} min={0} max={5000} step={50} prefix="$" />
+      <div className="grid md:grid-cols-2 gap-6">
+        <SliderInput label="Down Payment" id="a3" value={down} onChange={setDown} min={0} max={500000} step={5000} prefix="$" />
+        <SliderInput label="Interest Rate" id="a4" value={rate} onChange={setRate} min={1} max={12} step={0.125} suffix="%" />
       </div>
       <div className="grid md:grid-cols-2 gap-6 bg-gray-50 rounded-xl p-6">
         <div className="text-center">
@@ -199,10 +180,10 @@ function PrincipalCalc() {
   const totalPaid = pmt * n;
   return (
     <div className="space-y-6">
-      <div className="grid md:grid-cols-3 gap-4">
-        <Input label="Desired Monthly Payment ($)" id="p1" value={payment} onChange={e => setPayment(e.target.value)} />
-        <Input label="Interest Rate (%)" id="p2" value={rate} onChange={e => setRate(e.target.value)} />
-        <Input label="Loan Term (years)" id="p3" value={term} onChange={e => setTerm(e.target.value)} />
+      <SliderInput label="Desired Monthly Payment" id="p1" value={payment} onChange={setPayment} min={300} max={10000} step={50} prefix="$" />
+      <div className="grid md:grid-cols-2 gap-6">
+        <SliderInput label="Interest Rate" id="p2" value={rate} onChange={setRate} min={1} max={12} step={0.125} suffix="%" />
+        <SliderInput label="Loan Term" id="p3" value={term} onChange={setTerm} min={5} max={30} step={5} suffix=" yr" />
       </div>
       <div className="grid md:grid-cols-3 gap-6 bg-gray-50 rounded-xl p-6">
         <ResultBox label="Loan Amount" value={`$${fmtInt(Math.max(0, principal))}`} highlight />
@@ -227,21 +208,18 @@ function TaxBenefitsCalc() {
   const annualSavings = totalDeduction * taxBracket;
   return (
     <div className="space-y-6">
-      <div className="grid md:grid-cols-2 gap-4">
-        <Input label="Loan Amount ($)" id="tb1" value={loan} onChange={e => setLoan(e.target.value)} />
-        <Input label="Interest Rate (%)" id="tb2" value={rate} onChange={e => setRate(e.target.value)} />
-        <Input label="Tax Bracket (%)" id="tb3" value={taxRate} onChange={e => setTaxRate(e.target.value)} />
-        <Input label="Annual Property Tax ($)" id="tb4" value={propTax} onChange={e => setPropTax(e.target.value)} />
+      <SliderInput label="Loan Amount" id="tb1" value={loan} onChange={setLoan} min={50000} max={2000000} step={5000} prefix="$" />
+      <div className="grid md:grid-cols-2 gap-6">
+        <SliderInput label="Interest Rate" id="tb2" value={rate} onChange={setRate} min={1} max={12} step={0.125} suffix="%" />
+        <SliderInput label="Tax Bracket" id="tb3" value={taxRate} onChange={setTaxRate} min={10} max={37} step={1} suffix="%" />
       </div>
+      <SliderInput label="Annual Property Tax" id="tb4" value={propTax} onChange={setPropTax} min={0} max={25000} step={250} prefix="$" />
       <div className="grid md:grid-cols-3 gap-6 bg-gray-50 rounded-xl p-6">
         <ResultBox label="Annual Interest" value={`$${fmtInt(annualInterest)}`} />
         <ResultBox label="Total Deductions" value={`$${fmtInt(totalDeduction)}`} />
-        <div className="text-center">
-          <p className="text-sm text-gray-500 mb-1">Estimated Tax Savings</p>
-          <p className="text-2xl font-bold text-green-600">${fmtInt(annualSavings)}/yr</p>
-        </div>
+        <ResultBox label="Est. Tax Savings" value={`$${fmtInt(annualSavings)}/yr`} color="text-green-600" />
       </div>
-      <p className="text-xs text-gray-400 text-center">* This is a simplified estimate. Consult a tax professional for accurate advice.</p>
+      <p className="text-xs text-gray-400 text-center">* Simplified estimate. Consult a tax professional for accurate advice.</p>
       <CalcCTA />
     </div>
   );
@@ -253,29 +231,24 @@ function APRCalc() {
   const [rate, setRate] = useState("6.5");
   const [term, setTerm] = useState("30");
   const [fees, setFees] = useState("5000");
-  const p = parseFloat(loan) || 0;
-  const f = parseFloat(fees) || 0;
-  const r = parseFloat(rate) || 0;
-  const t = parseFloat(term) || 30;
+  const p = parseFloat(loan) || 0, f = parseFloat(fees) || 0;
+  const r = parseFloat(rate) || 0, t = parseFloat(term) || 30;
   const basePmt = calcPayment(p, r, t);
-  // APR: effective rate when fees are rolled in
   const effectiveLoan = p - f;
-  // Find APR by iteration (bisection)
   let lo = 0, hi = 30;
   for (let i = 0; i < 100; i++) {
     const mid = (lo + hi) / 2;
-    const pmt = calcPayment(effectiveLoan, mid, t);
-    if (pmt < basePmt) lo = mid; else hi = mid;
+    if (calcPayment(effectiveLoan, mid, t) < basePmt) lo = mid; else hi = mid;
   }
   const apr = (lo + hi) / 2;
   return (
     <div className="space-y-6">
-      <div className="grid md:grid-cols-2 gap-4">
-        <Input label="Loan Amount ($)" id="apr1" value={loan} onChange={e => setLoan(e.target.value)} />
-        <Input label="Interest Rate (%)" id="apr2" value={rate} onChange={e => setRate(e.target.value)} />
-        <Input label="Loan Term (years)" id="apr3" value={term} onChange={e => setTerm(e.target.value)} />
-        <Input label="Total Fees & Points ($)" id="apr4" value={fees} onChange={e => setFees(e.target.value)} />
+      <SliderInput label="Loan Amount" id="apr1" value={loan} onChange={setLoan} min={50000} max={2000000} step={5000} prefix="$" />
+      <div className="grid md:grid-cols-2 gap-6">
+        <SliderInput label="Interest Rate" id="apr2" value={rate} onChange={setRate} min={1} max={12} step={0.125} suffix="%" />
+        <SliderInput label="Loan Term" id="apr3" value={term} onChange={setTerm} min={5} max={30} step={5} suffix=" yr" />
       </div>
+      <SliderInput label="Total Fees & Points" id="apr4" value={fees} onChange={setFees} min={0} max={30000} step={500} prefix="$" />
       <div className="grid md:grid-cols-3 gap-6 bg-gray-50 rounded-xl p-6">
         <ResultBox label="Note Rate" value={`${r.toFixed(3)}%`} />
         <ResultBox label="APR" value={`${apr.toFixed(3)}%`} highlight />
@@ -292,28 +265,23 @@ function InterestOnlyCalc() {
   const [rate, setRate] = useState("6.5");
   const [ioPeriod, setIoPeriod] = useState("10");
   const [term, setTerm] = useState("30");
-  const p = parseFloat(loan) || 0;
-  const r = parseFloat(rate) || 0;
-  const io = parseFloat(ioPeriod) || 10;
-  const t = parseFloat(term) || 30;
+  const p = parseFloat(loan) || 0, r = parseFloat(rate) || 0;
+  const io = parseFloat(ioPeriod) || 10, t = parseFloat(term) || 30;
   const ioPayment = p * (r / 100 / 12);
-  const remainingTerm = t - io;
-  const fullPayment = remainingTerm > 0 ? calcPayment(p, r, remainingTerm) : 0;
+  const remaining = t - io;
+  const fullPayment = remaining > 0 ? calcPayment(p, r, remaining) : 0;
   return (
     <div className="space-y-6">
-      <div className="grid md:grid-cols-2 gap-4">
-        <Input label="Loan Amount ($)" id="io1" value={loan} onChange={e => setLoan(e.target.value)} />
-        <Input label="Interest Rate (%)" id="io2" value={rate} onChange={e => setRate(e.target.value)} />
-        <Input label="Interest-Only Period (years)" id="io3" value={ioPeriod} onChange={e => setIoPeriod(e.target.value)} />
-        <Input label="Total Loan Term (years)" id="io4" value={term} onChange={e => setTerm(e.target.value)} />
+      <SliderInput label="Loan Amount" id="io1" value={loan} onChange={setLoan} min={50000} max={2000000} step={5000} prefix="$" />
+      <SliderInput label="Interest Rate" id="io2" value={rate} onChange={setRate} min={1} max={12} step={0.125} suffix="%" />
+      <div className="grid md:grid-cols-2 gap-6">
+        <SliderInput label="Interest-Only Period" id="io3" value={ioPeriod} onChange={setIoPeriod} min={1} max={15} step={1} suffix=" yr" />
+        <SliderInput label="Total Loan Term" id="io4" value={term} onChange={setTerm} min={10} max={30} step={5} suffix=" yr" />
       </div>
       <div className="grid md:grid-cols-3 gap-6 bg-gray-50 rounded-xl p-6">
         <ResultBox label="IO Payment" value={`$${fmt(ioPayment)}`} highlight />
         <ResultBox label="Full Payment After IO" value={`$${fmt(fullPayment)}`} />
-        <div className="text-center">
-          <p className="text-sm text-gray-500 mb-1">Payment Increase</p>
-          <p className="text-2xl font-bold text-orange-600">+${fmt(Math.max(0, fullPayment - ioPayment))}</p>
-        </div>
+        <ResultBox label="Payment Increase" value={`+$${fmt(Math.max(0, fullPayment - ioPayment))}`} color="text-orange-600" />
       </div>
       <CalcCTA />
     </div>
@@ -324,39 +292,36 @@ function InterestOnlyCalc() {
 function PointsCalc() {
   const [loan, setLoan] = useState("300000");
   const [rate, setRate] = useState("6.5");
-  const [rateWithPoints, setRateWithPoints] = useState("6.0");
-  const [pointsCost, setPointsCost] = useState("1");
+  const [rateWP, setRateWP] = useState("6.0");
+  const [ptsCost, setPtsCost] = useState("1");
   const [term, setTerm] = useState("30");
-  const p = parseFloat(loan) || 0;
-  const t = parseFloat(term) || 30;
+  const p = parseFloat(loan) || 0, t = parseFloat(term) || 30;
   const noPoints = calcPayment(p, parseFloat(rate) || 0, t);
-  const withPoints = calcPayment(p, parseFloat(rateWithPoints) || 0, t);
+  const withPoints = calcPayment(p, parseFloat(rateWP) || 0, t);
   const savings = noPoints - withPoints;
-  const cost = p * ((parseFloat(pointsCost) || 0) / 100);
-  const breakEvenMonths = savings > 0 ? Math.ceil(cost / savings) : 0;
+  const cost = p * ((parseFloat(ptsCost) || 0) / 100);
+  const breakEven = savings > 0 ? Math.ceil(cost / savings) : 0;
   return (
     <div className="space-y-6">
-      <div className="grid md:grid-cols-2 gap-4">
-        <Input label="Loan Amount ($)" id="pt1" value={loan} onChange={e => setLoan(e.target.value)} />
-        <Input label="Rate Without Points (%)" id="pt2" value={rate} onChange={e => setRate(e.target.value)} />
-        <Input label="Rate With Points (%)" id="pt3" value={rateWithPoints} onChange={e => setRateWithPoints(e.target.value)} />
-        <Input label="Points Cost (%)" id="pt4" value={pointsCost} onChange={e => setPointsCost(e.target.value)} />
-        <Input label="Loan Term (years)" id="pt5" value={term} onChange={e => setTerm(e.target.value)} />
+      <SliderInput label="Loan Amount" id="pt1" value={loan} onChange={setLoan} min={50000} max={2000000} step={5000} prefix="$" />
+      <div className="grid md:grid-cols-2 gap-6">
+        <SliderInput label="Rate Without Points" id="pt2" value={rate} onChange={setRate} min={1} max={12} step={0.125} suffix="%" />
+        <SliderInput label="Rate With Points" id="pt3" value={rateWP} onChange={setRateWP} min={1} max={12} step={0.125} suffix="%" />
+      </div>
+      <div className="grid md:grid-cols-2 gap-6">
+        <SliderInput label="Points Cost" id="pt4" value={ptsCost} onChange={setPtsCost} min={0.25} max={4} step={0.25} suffix="%" />
+        <SliderInput label="Loan Term" id="pt5" value={term} onChange={setTerm} min={5} max={30} step={5} suffix=" yr" />
       </div>
       <div className="grid md:grid-cols-3 gap-6 bg-gray-50 rounded-xl p-6">
-        <div className="text-center">
-          <p className="text-sm text-gray-500 mb-1">Cost of Points</p>
-          <p className="text-2xl font-bold text-gray-800">${fmtInt(cost)}</p>
-        </div>
-        <div className="text-center">
-          <p className="text-sm text-gray-500 mb-1">Monthly Savings</p>
-          <p className="text-2xl font-bold text-green-600">${fmt(Math.max(0, savings))}</p>
-        </div>
-        <ResultBox label="Break Even" value={breakEvenMonths > 0 ? `${breakEvenMonths} months` : "N/A"} highlight />
+        <ResultBox label="Cost of Points" value={`$${fmtInt(cost)}`} />
+        <ResultBox label="Monthly Savings" value={`$${fmt(Math.max(0, savings))}`} color="text-green-600" />
+        <ResultBox label="Break Even" value={breakEven > 0 ? `${breakEven} mo` : "N/A"} highlight />
       </div>
-      <p className="text-xs text-gray-400 text-center">
-        If you plan to stay longer than {breakEvenMonths > 0 ? `${(breakEvenMonths / 12).toFixed(1)} years` : "N/A"}, paying points saves money.
-      </p>
+      {breakEven > 0 && (
+        <p className="text-xs text-gray-400 text-center">
+          If you stay longer than {(breakEven / 12).toFixed(1)} years, paying points saves you money.
+        </p>
+      )}
       <CalcCTA />
     </div>
   );
@@ -364,31 +329,32 @@ function PointsCalc() {
 
 // ─── 10. Income Calculator ──────────────────────
 function IncomeCalc() {
-  const [homePrice, setHomePrice] = useState("350000");
+  const [price, setPrice] = useState("350000");
   const [down, setDown] = useState("20000");
   const [rate, setRate] = useState("6.5");
   const [term, setTerm] = useState("30");
   const [debts, setDebts] = useState("500");
-  const loan = (parseFloat(homePrice) || 0) - (parseFloat(down) || 0);
+  const loan = (parseFloat(price) || 0) - (parseFloat(down) || 0);
   const t = parseFloat(term) || 30;
   const mo = calcPayment(loan, parseFloat(rate) || 0, t);
   const moDebts = parseFloat(debts) || 0;
-  // Using 43% DTI ratio
-  const requiredMonthlyIncome = (mo + moDebts) / 0.43;
-  const requiredAnnualIncome = requiredMonthlyIncome * 12;
+  const reqMonthly = (mo + moDebts) / 0.43;
+  const reqAnnual = reqMonthly * 12;
   return (
     <div className="space-y-6">
-      <div className="grid md:grid-cols-2 gap-4">
-        <Input label="Home Price ($)" id="inc1" value={homePrice} onChange={e => setHomePrice(e.target.value)} />
-        <Input label="Down Payment ($)" id="inc2" value={down} onChange={e => setDown(e.target.value)} />
-        <Input label="Interest Rate (%)" id="inc3" value={rate} onChange={e => setRate(e.target.value)} />
-        <Input label="Loan Term (years)" id="inc4" value={term} onChange={e => setTerm(e.target.value)} />
-        <Input label="Monthly Debts ($)" id="inc5" value={debts} onChange={e => setDebts(e.target.value)} />
+      <SliderInput label="Home Price" id="inc1" value={price} onChange={setPrice} min={50000} max={2000000} step={5000} prefix="$" />
+      <div className="grid md:grid-cols-2 gap-6">
+        <SliderInput label="Down Payment" id="inc2" value={down} onChange={setDown} min={0} max={500000} step={5000} prefix="$" />
+        <SliderInput label="Interest Rate" id="inc3" value={rate} onChange={setRate} min={1} max={12} step={0.125} suffix="%" />
+      </div>
+      <div className="grid md:grid-cols-2 gap-6">
+        <SliderInput label="Loan Term" id="inc4" value={term} onChange={setTerm} min={5} max={30} step={5} suffix=" yr" />
+        <SliderInput label="Monthly Debts" id="inc5" value={debts} onChange={setDebts} min={0} max={5000} step={50} prefix="$" />
       </div>
       <div className="grid md:grid-cols-3 gap-6 bg-gray-50 rounded-xl p-6">
-        <ResultBox label="Required Annual Income" value={`$${fmtInt(Math.max(0, requiredAnnualIncome))}`} highlight />
+        <ResultBox label="Required Annual Income" value={`$${fmtInt(Math.max(0, reqAnnual))}`} highlight />
         <ResultBox label="Monthly Payment" value={`$${fmt(mo)}`} />
-        <ResultBox label="Required Monthly Income" value={`$${fmtInt(Math.max(0, requiredMonthlyIncome))}`} />
+        <ResultBox label="Required Monthly Income" value={`$${fmtInt(Math.max(0, reqMonthly))}`} />
       </div>
       <p className="text-xs text-gray-400 text-center">* Based on 43% maximum debt-to-income ratio.</p>
       <CalcCTA />
@@ -401,33 +367,28 @@ function BuydownCalc() {
   const [loan, setLoan] = useState("300000");
   const [rate, setRate] = useState("6.5");
   const [term, setTerm] = useState("30");
-  const p = parseFloat(loan) || 0;
-  const r = parseFloat(rate) || 0;
-  const t = parseFloat(term) || 30;
-  // 2-1 buydown: Year 1 = rate-2%, Year 2 = rate-1%, Year 3+ = full rate
+  const p = parseFloat(loan) || 0, r = parseFloat(rate) || 0, t = parseFloat(term) || 30;
   const yr1Pmt = calcPayment(p, Math.max(0, r - 2), t);
   const yr2Pmt = calcPayment(p, Math.max(0, r - 1), t);
   const fullPmt = calcPayment(p, r, t);
-  const yr1Savings = (fullPmt - yr1Pmt) * 12;
-  const yr2Savings = (fullPmt - yr2Pmt) * 12;
-  const totalBuydownCost = yr1Savings + yr2Savings;
+  const totalBuydownCost = (fullPmt - yr1Pmt) * 12 + (fullPmt - yr2Pmt) * 12;
   return (
     <div className="space-y-6">
       <p className="text-sm text-gray-600 bg-gray-50 rounded-lg p-3">
-        A <strong>2-1 buydown</strong> temporarily reduces your rate by 2% in year 1 and 1% in year 2, then returns to the full rate. The cost is often paid by the seller as a concession.
+        A <strong>2-1 buydown</strong> temporarily reduces your rate by 2% in year 1 and 1% in year 2, then returns to the full rate. The cost is often paid by the seller.
       </p>
-      <div className="grid md:grid-cols-3 gap-4">
-        <Input label="Loan Amount ($)" id="bd1" value={loan} onChange={e => setLoan(e.target.value)} />
-        <Input label="Note Rate (%)" id="bd2" value={rate} onChange={e => setRate(e.target.value)} />
-        <Input label="Loan Term (years)" id="bd3" value={term} onChange={e => setTerm(e.target.value)} />
+      <SliderInput label="Loan Amount" id="bd1" value={loan} onChange={setLoan} min={50000} max={2000000} step={5000} prefix="$" />
+      <div className="grid md:grid-cols-2 gap-6">
+        <SliderInput label="Note Rate" id="bd2" value={rate} onChange={setRate} min={3} max={12} step={0.125} suffix="%" />
+        <SliderInput label="Loan Term" id="bd3" value={term} onChange={setTerm} min={5} max={30} step={5} suffix=" yr" />
       </div>
       <div className="grid md:grid-cols-3 gap-4">
         <div className="bg-green-50 rounded-xl p-4 text-center">
-          <p className="text-xs text-green-700 font-medium mb-1">Year 1 ({(r - 2).toFixed(1)}%)</p>
+          <p className="text-xs text-green-700 font-medium mb-1">Year 1 ({Math.max(0, r - 2).toFixed(1)}%)</p>
           <p className="text-xl font-bold text-green-700">${fmt(yr1Pmt)}/mo</p>
         </div>
         <div className="bg-blue-50 rounded-xl p-4 text-center">
-          <p className="text-xs text-blue-700 font-medium mb-1">Year 2 ({(r - 1).toFixed(1)}%)</p>
+          <p className="text-xs text-blue-700 font-medium mb-1">Year 2 ({Math.max(0, r - 1).toFixed(1)}%)</p>
           <p className="text-xl font-bold text-blue-700">${fmt(yr2Pmt)}/mo</p>
         </div>
         <div className="bg-gray-50 rounded-xl p-4 text-center">
@@ -477,7 +438,6 @@ export default function MortgageCalculatorsPage() {
 
       <Section>
         <div className="max-w-4xl mx-auto">
-          {/* Tabs */}
           <div className="flex flex-wrap gap-2 justify-center mb-8">
             {calculators.map((calc) => (
               <button
